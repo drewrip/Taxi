@@ -4,7 +4,7 @@
 #include <vector>
 #include <iomanip>
 
-#define TRIALS 1000000000000
+#define TRIALS 1000000000
 
 #define WINNER 0x00
 #define SINGLE 0x33

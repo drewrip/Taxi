@@ -3,10 +3,9 @@
 #include <ctime>
 #include <vector>
 #include <iomanip>
-#include <thread>
-#include <chrono>
+#include <fstream>
 
-#define TRIALS 1000
+#define TRIALS 1000000
 
 #define WINNER 0x00
 #define SINGLE 0x33
@@ -14,7 +13,6 @@
 #define TRIPLE 0xff
 
 std::vector<unsigned char> pool;
-using namespace std::chrono_literals;
 bool draw(){
 	int tick = 0;
 	pool = {TRIPLE, TRIPLE, TRIPLE, TRIPLE, TRIPLE, TRIPLE, DOUBLE, DOUBLE, DOUBLE, DOUBLE, DOUBLE, DOUBLE, DOUBLE, DOUBLE, DOUBLE, SINGLE, SINGLE, SINGLE, SINGLE, WINNER};
@@ -42,13 +40,18 @@ bool draw(){
 }
 
 int main(){
+	std::ofstream data;
+  	data.open("data/graph.dat");
 	int successes = 0;
 	srand(time(NULL));
 	std::cout << std::setprecision(30) << std::fixed;
+	data << std::setprecision(30) << std::fixed;
 	for(int i=0; i < TRIALS; i++){
 		successes += (int)draw();
-		std::cout << "Trial: " << i+1 << ": " << ((double)successes/(i+1)) << std::endl;
-		std::this_thread::sleep_for(500ms);
+		data << i+1 << "\t" << ((double)successes/(i+1)) << std::endl;
 	}
+	std::cout << "Individual Drawn: " << successes << "\tNumber Of Trials: " << TRIALS << "\tFrequency: " << ((double)successes/TRIALS) << std::endl;
+	std::cout << "Time Series Written to data/graph.dat" << std::endl;
+	data.close();
 	return 0;
 }
